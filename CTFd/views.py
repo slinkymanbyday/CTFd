@@ -62,6 +62,8 @@ def init_views(app):
                 html = request.form['html']
                 page = Pages('index', html)
 
+                #max tries
+                max_tries = Config("max_tries",0)
                 ## Start time
                 start = Config('start', None)
                 end = Config('end', None)
@@ -77,6 +79,7 @@ def init_views(app):
                 db.session.add(ctf_name)
                 db.session.add(admin)
                 db.session.add(page)
+                db.session.add(max_tries)
                 db.session.add(start)
                 db.session.add(end)
                 db.session.add(view_challenges_unregistered)

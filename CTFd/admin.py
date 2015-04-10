@@ -63,8 +63,7 @@ def init_admin(app):
                 prevent_registration = None
 
             ctf_name = set_config("ctf_name", request.form.get('ctf_name', None))
-            mg_api_key = set_config("mg_api_key", request.form.get('mg_api_key', None))
-            do_api_key = set_config("do_api_key", request.form.get('do_api_key', None))
+            max_tries = set_config("max_tries", request.form.get('max_tries', None))
 
             db_start = Config.query.filter_by(key='start').first()
             db_start.value = start
@@ -87,16 +86,12 @@ def init_admin(app):
             return redirect('/admin/config')
 
         ctf_name = get_config('ctf_name')
-        if not ctf_name:
-            set_config('do_api_key', None)
 
-        mg_api_key = get_config('do_api_key')
-        if not mg_api_key:
-            set_config('do_api_key', None)
-
-        do_api_key = get_config('do_api_key')
-        if not do_api_key:
-            set_config('do_api_key', None)
+        start = get_config('start')
+        max_tries = get_config('max_tries')
+        if not max_tries:
+            set_config('max_tries', 0)
+            max_tries = 0
 
         start = get_config('start')
         if not start:
@@ -117,9 +112,9 @@ def init_admin(app):
         db.session.commit()
         db.session.close()
 
-        return render_template('admin/config.html', ctf_name=ctf_name, start=start, end=end,
+        return render_template('admin/config.html', ctf_name=ctf_name, max_tries=max_tries, start=start, end=end,
                                view_challenges_unregistered=view_challenges_unregistered,
-                               prevent_registration=prevent_registration, do_api_key=do_api_key, mg_api_key=mg_api_key)
+                               prevent_registration=prevent_registration)
 
     @app.route('/admin/pages', defaults={'route': None}, methods=['GET', 'POST'])
     @app.route('/admin/pages/<route>', methods=['GET', 'POST'])
@@ -153,21 +148,6 @@ def init_admin(app):
         return render_template('admin/pages.html', routes=pages)
 
 
-    @app.route('/admin/hosts', methods=['GET'])
-    @admins_only
-    def admin_hosts():
-        m = get_digitalocean()
-        errors = []
-        if not m:
-            errors.append("Your Digital Ocean API key is not set")
-            return render_template('admin/hosts.html', errors=errors)
-
-        hosts = m.get_all_droplets()
-        slugs = m.get_all_sizes()
-        images = m.get_all_images()
-        regions = m.get_all_regions()
-
-        return render_template('admin/hosts.html', hosts=hosts, slugs=slugs, images=images, regions=regions)
 
     @app.route('/admin/chals', methods=['POST', 'GET'])
     @admins_only

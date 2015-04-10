@@ -105,6 +105,11 @@ function submitkey(chal, key, nonce) {
           $('#submit-key').css('background-color', '#e18728')
           $('#submit-key').prop('disabled', true)
         }
+        else if (data == 4){ // too many incorrect solves
+          $('#submit-key').text('Too many attempts')
+          $('#submit-key').css('background-color', 'red')
+          $('#submit-key').prop('disabled', true)
+        }
         marksolves()
         updatesolves()
         setTimeout(function(){
