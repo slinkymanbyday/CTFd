@@ -31,7 +31,7 @@ def init_views(app):
 
     @app.before_request
     def redirect_setup():
-        if request.path == "/static/css/style.css":
+        if "/static/" in request.path:
             return
         if not is_setup() and request.path != "/setup":
             return redirect('/setup')
@@ -39,6 +39,9 @@ def init_views(app):
     @app.before_first_request
     def needs_setup():
         if not is_setup():
+            #clear and regen session if first setup
+            session.regenerate()
+            session.clear()
             return redirect('/setup')
 
     @app.route('/setup', methods=['GET', 'POST'])

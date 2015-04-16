@@ -10,6 +10,7 @@ import logging
 import time
 import re
 import os
+from flask_kvsession import KVSessionExtension
 
 def init_auth(app):
     @app.context_processor
@@ -113,7 +114,8 @@ Did you initiate a password reset?
                 try:
                     session.regenerate() # NO SESSION FIXATION FOR YOU
                 except:
-                    pass # TODO: Some session objects don't implement regenerate :(
+                    pass
+ 
                 session['username'] = team.name
                 session['id'] = team.id
                 session['admin'] = team.admin
@@ -121,7 +123,7 @@ Did you initiate a password reset?
                 db.session.close()
 
                 logger = logging.getLogger('logins')
-                logger.warn("[{0}] {1} logged in".format(time.strftime("%m/%d/%Y %X"), session['username'].encode('utf-8')))    
+                logger.warn("[{0}] {1} logged in".format(time.strftime("%m/%d/%Y %X"), session['username'].encode('utf-8')))
 
                 # if request.args.get('next') and is_safe_url(request.args.get('next')):
                 #     return redirect(request.args.get('next'))
@@ -139,4 +141,8 @@ Did you initiate a password reset?
     def logout():
         if authed():
             session.clear()
+            try:
+                session.regenerate()
+            except:
+                pass
         return redirect('/')

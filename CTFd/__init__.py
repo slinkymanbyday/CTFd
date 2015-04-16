@@ -3,6 +3,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.mail import Mail, Message
 from logging.handlers import RotatingFileHandler
 from flask.ext.session import Session
+from flask_kvsession import KVSessionExtension
+from simplekv.fs import FilesystemStore
 import logging
 import os
 import sqlalchemy
@@ -31,8 +33,10 @@ def create_app(subdomain="", username="", password=""):
         global mail
         mail = Mail(app)
 
-        Session(app)
-
+        #instead of using default Flask session which does not support regenerate, we use kvsession
+        store = FilesystemStore(app.config['SESSION_FILE_DIR'])
+        KVSessionExtension(store, app)
+        
         from CTFd.views import init_views
         init_views(app)
         from CTFd.errors import init_errors

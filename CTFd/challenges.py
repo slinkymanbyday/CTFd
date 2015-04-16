@@ -10,6 +10,7 @@ import logging
 def init_challenges(app):
     @app.route('/challenges', methods=['GET'])
     def challenges():
+        #print session.sid
         if not ctftime():
             return redirect('/')
         if can_view_challenges():
