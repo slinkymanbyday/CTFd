@@ -10,7 +10,6 @@ import logging
 import time
 import re
 import os
-from flask_kvsession import KVSessionExtension
 
 def init_auth(app):
     @app.context_processor
