@@ -34,6 +34,9 @@ def create_app(subdomain="", username="", password=""):
         mail = Mail(app)
 
         #instead of using default Flask session which does not support regenerate, we use kvsession
+        #for some reason FilesystemStore does not create the directory..... weird, but fixed by creating the dir here.
+        if not os.path.exists(app.config['SESSION_FILE_DIR']):
+            os.makedirs(app.config['SESSION_FILE_DIR'])
         store = FilesystemStore(app.config['SESSION_FILE_DIR'])
         KVSessionExtension(store, app)
         
