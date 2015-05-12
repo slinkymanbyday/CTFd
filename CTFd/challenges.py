@@ -1,6 +1,6 @@
 from flask import current_app as app, render_template, request, redirect, abort, jsonify, json as json_mod, url_for, session
 
-from CTFd.utils import ctftime, authed, unix_time, get_kpm, can_view_challenges, get_config
+from CTFd.utils import ctftime, authed, unix_time, get_kpm, can_view_challenges, get_config, is_admin
 from CTFd.models import db, Challenges, Files, Solves, WrongKeys, Keys
 
 import time
@@ -10,8 +10,7 @@ import logging
 def init_challenges(app):
     @app.route('/challenges', methods=['GET'])
     def challenges():
-        #print session.sid
-        if not ctftime():
+        if not is_admin() and not ctftime():
             return redirect('/')
         if can_view_challenges():
             return render_template('chals.html')
@@ -20,7 +19,7 @@ def init_challenges(app):
 
     @app.route('/chals', methods=['GET'])
     def chals():
-        if not ctftime():
+        if not is_admin() and not ctftime():
             return redirect('/')
         if can_view_challenges():
             chals = Challenges.query.add_columns('id', 'name', 'value', 'description', 'category').order_by(Challenges.value).all()
