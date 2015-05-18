@@ -93,11 +93,15 @@ def init_admin(app):
 
         ctf_name = get_config('ctf_name')
 
-        start = get_config('start')
         max_tries = get_config('max_tries')
         if not max_tries:
             set_config('max_tries', 0)
             max_tries = 0
+
+        allow_view_after_end = get_config('allow_view_after_end')
+        if not allow_view_after_end:
+            set_config('allow_view_after_end', 0)
+            allow_view_after_end = 0
 
         start = get_config('start')
         if not start:
@@ -126,7 +130,8 @@ def init_admin(app):
                                max_tries=max_tries,
                                view_challenges_unregistered=view_challenges_unregistered,
                                prevent_registration=prevent_registration, 
-                               prevent_name_change=prevent_name_change)
+                               prevent_name_change=prevent_name_change,
+                               allow_view_after_end=allow_view_after_end)
 
     @app.route('/admin/pages', defaults={'route': None}, methods=['GET', 'POST'])
     @app.route('/admin/pages/<route>', methods=['GET', 'POST'])
