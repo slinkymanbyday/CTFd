@@ -99,11 +99,6 @@ def init_admin(app):
             set_config('max_tries', 0)
             max_tries = 0
 
-        max_tries = get_config('max_tries')
-        if not max_tries:
-            set_config('max_tries', 0)
-            max_tries = 0
-
         start = get_config('start')
         if not start:
             set_config('start', None)
