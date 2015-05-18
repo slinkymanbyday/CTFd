@@ -65,8 +65,9 @@ def init_views(app):
                 html = request.form['html']
                 page = Pages('index', html)
 
-                #max tries
+                #max attempts per challenge
                 max_tries = Config("max_tries",0)
+
                 ## Start time
                 start = Config('start', None)
                 end = Config('end', None)

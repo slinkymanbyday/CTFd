@@ -58,7 +58,17 @@ def init_challenges(app):
         db.session.close()
         json = {'solves':[]}
         for x in solves:
-            json['solves'].append({'id':x.id, 'chal':x.chal.name, 'chalid':x.chalid,'team':x.teamid, 'value': x.chal.value, 'category':x.chal.category, 'time':unix_time(x.date)})
+            json['solves'].append({ 'chal':x.chal.name, 'chalid':x.chalid,'team':x.teamid, 'value': x.chal.value, 'category':x.chal.category, 'time':unix_time(x.date)})
+        return jsonify(json)
+
+    @app.route('/maxattempts')
+    def attempts():
+        chals = Challenges.query.add_columns('id').all()
+        json = {'maxattempts':[]}
+        for chal, chalid in chals:
+            fails = WrongKeys.query.filter_by(team=session['id'], chal=chalid).count()
+            if fails >= int(get_config("max_tries")) and int(get_config("max_tries")) > 0:
+                json['maxattempts'].append({'chalid':chalid})
         return jsonify(json)
 
     @app.route('/fails/<teamid>', methods=['GET'])

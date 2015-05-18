@@ -99,6 +99,11 @@ def init_admin(app):
             set_config('max_tries', 0)
             max_tries = 0
 
+        max_tries = get_config('max_tries')
+        if not max_tries:
+            set_config('max_tries', 0)
+            max_tries = 0
+
         start = get_config('start')
         if not start:
             set_config('start', None)
@@ -122,7 +127,8 @@ def init_admin(app):
         db.session.commit()
         db.session.close()
 
-        return render_template('admin/config.html', ctf_name=ctf_name, max_tries=max_tries, start=start, end=end,
+        return render_template('admin/config.html', ctf_name=ctf_name, start=start, end=end,
+                               max_tries=max_tries,
                                view_challenges_unregistered=view_challenges_unregistered,
                                prevent_registration=prevent_registration, 
                                prevent_name_change=prevent_name_change)
