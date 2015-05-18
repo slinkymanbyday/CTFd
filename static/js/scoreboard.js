@@ -62,10 +62,10 @@ function scoregraph () {
           team_scores = cumulativesum(team_scores)
 
           times.unshift("x"+i)
-          times.push( Math.round(new Date().getTime()/1000) )
+          // times.push( Math.round(new Date().getTime()/1000) )
 
           team_scores.unshift(teams[i])
-          team_scores.push( team_scores[team_scores.length-1] )
+          // team_scores.push( team_scores[team_scores.length-1] )
 
               
           xs_data[teams[i]] = "x"+i
@@ -79,12 +79,13 @@ function scoregraph () {
             data: {
                 xs: xs_data,
                 columns: column_data,
-                type: "step",
-                labels: true
+                type: "step"
+                // labels: true
             },
             axis : {
                 x : {
                     tick: {
+                        count: 10,
                         format: function (x) { 
                             return moment(x*1000).local().format('LLL');
                         }
@@ -97,9 +98,9 @@ function scoregraph () {
                     }
                 }
             },
-            // zoom : {
-            //   enabled: true
-            // }
+            zoom : {
+              enabled: true
+            }
         });
     });
 }
